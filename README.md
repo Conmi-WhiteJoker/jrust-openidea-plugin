@@ -76,4 +76,9 @@ languages/jrust.toml  语言定义：扩展名、注释、缩进、高亮模式�
 templates/Main.jrust  新建文件模板（类名 $NAME$、光标停在 $END$）
 src/lib.rs            “新建项目”命令 + launch-configurations 导出（扫描 *.jrust 生成运行/调试配置）
 Cargo.toml            wasm32-wasip2 cdylib + OpenIDEA SDK
+LICENSE               MIT 许可
 ```
+
+## 许可
+
+MIT，见 [LICENSE](LICENSE)。与 [jrust](https://gitee.com/conmi/jrust) 保持一致，保留版权声明即可。
