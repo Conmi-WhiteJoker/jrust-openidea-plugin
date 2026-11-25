@@ -1,6 +1,7 @@
 //! jrust 的 OpenIDEA 插件。
 //!
 //! - 语言注册（`languages/jrust.toml`）：`.jrust` 文件用 Java 模式高亮，并声明 DAP 调试器。
+//! - 新建项目：`jrust: 新建项目…` 命令（工具菜单 / 查找操作）调用 `jrust new` 生成骨架并打开。
 //! - 运行配置：项目里每个 `.jrust` 文件都生成一条 `jrust run <文件>`。
 //! - 调试：配置的 `debugger` 留空，IDE 从 args 里的 `.jrust` 文件推断出 jrust 语言，
 //!   再启动该语言的 `[debugger]`（`jrust dap`，stdio）；断点落在 `.jrust` 源码行上。
@@ -22,8 +23,36 @@ impl Plugin for JrustPlugin {
         _ctx: &Invocation,
         _arg: Option<&str>,
     ) -> Result<Option<String>, Error> {
-        Err(Error::Invalid(format!("jrust 插件没有命令: {id}")))
+        match id {
+            "new-project" => new_project(),
+            _ => Err(Error::Invalid(format!("jrust 插件没有命令: {id}"))),
+        }
     }
+}
+
+/// “新建项目”命令：选目录、输名称，交给 `jrust new` 生成骨架，再用 IDE 正常流程打开。
+/// 项目生成器目录内置在 IDE 里，插件只能提供这个等效入口。
+fn new_project() -> Result<Option<String>, Error> {
+    let Some(parent) = host::pick_directory("选择 jrust 项目所在目录", None)? else {
+        return Ok(None);
+    };
+    let Some(name) = host::input("jrust 项目名称", Some("hello-jrust"))? else {
+        return Ok(None);
+    };
+    let name = name.trim();
+    if name.is_empty() || name == "." || name == ".." || name.contains(['/', '\\']) {
+        return Err(Error::Invalid(format!("项目名称不合法: {name}")));
+    }
+    let target = std::path::Path::new(&parent).join(name);
+    let target = target.to_string_lossy().into_owned();
+
+    let out = host::run_process("jrust", &["new".to_string(), target.clone()], None)?;
+    if out.status != Some(0) {
+        let message = if out.stderr.trim().is_empty() { out.stdout } else { out.stderr };
+        return Err(Error::Failed(message.trim().to_string()));
+    }
+    host::open_project(&target, true)?;
+    Ok(Some(format!("已创建 jrust 项目 {target}")))
 }
 
 impl LaunchConfigurations for JrustPlugin {

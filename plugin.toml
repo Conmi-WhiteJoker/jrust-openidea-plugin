@@ -1,7 +1,7 @@
 id = "jrust.openidea"
 name = "jrust"
-version = "0.2.0"
-description = "jrust 语言支持：语法高亮、按文件运行、DAP 调试"
+version = "0.3.0"
+description = "jrust 语言支持：语法高亮、新建项目、按文件运行、DAP 调试"
 authors = ["jrust contributors"]
 license = "MIT"
 engines.openidea = "^1.10"
@@ -13,6 +13,17 @@ required = ["project.read", "process:jrust"]
 
 [[contributes.languages]]
 path = "languages/jrust.toml"
+
+# 工具菜单里的“新建 jrust 项目…”，也是查找操作（Ctrl+Shift+A）的一项。
+# 新建项目向导的目录是 IDE 内置表，插件无法扩展，所以入口放在菜单里。
+[[contributes.commands]]
+id = "new-project"
+title = "jrust: 新建项目…"
+category = "jrust"
+
+[[contributes.menus]]
+menu = "tools"
+command = "new-project"
 
 # 文件 › 新建 › 文件… 里的 “jrust Class” 模板，类名取自文件名（$NAME$）。
 [[contributes.fileTemplates]]
