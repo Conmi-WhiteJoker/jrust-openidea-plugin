@@ -1,6 +1,6 @@
 id = "jrust.openidea"
 name = "jrust"
-version = "0.1.0"
+version = "0.2.0"
 description = "jrust 语言支持：语法高亮、按文件运行、DAP 调试"
 authors = ["jrust contributors"]
 license = "MIT"
@@ -13,6 +13,13 @@ required = ["project.read", "process:jrust"]
 
 [[contributes.languages]]
 path = "languages/jrust.toml"
+
+# 文件 › 新建 › 文件… 里的 “jrust Class” 模板，类名取自文件名（$NAME$）。
+[[contributes.fileTemplates]]
+id = "jrust-class"
+name = "jrust Class"
+extension = "jrust"
+path = "templates/Main.jrust"
 
 # 项目根目录存在 main.jrust（单文件项目）或 Cargo.toml（jrust 编译器仓库）时，
 # 才调用 launch-configurations 导出，为项目内每个 .jrust 文件生成一条配置。

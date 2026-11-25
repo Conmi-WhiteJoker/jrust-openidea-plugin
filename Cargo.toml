@@ -1,6 +1,6 @@
 [package]
 name = "jrust-openidea-plugin"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "jrust 的 OpenIDEA 插件：语言注册、运行配置与 DAP 调试"
 license = "MIT"

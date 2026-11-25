@@ -7,6 +7,7 @@
 | 能力 | 实现 |
 | --- | --- |
 | 高亮 | 注册 `.jrust` 扩展名，复用 CodeMirror 的 `Java` 模式（jrust 是 Java 风格语法） |
+| 新建文件 | **文件 › 新建 › 文件…** 提供 “jrust Class” 模板，类名取自文件名（`$NAME$`） |
 | 运行 | 为项目内每个 `*.jrust` 生成运行配置：`jrust run <绝对路径>` |
 | 调试 | 运行配置的 `debugger` 留空，IDE 从 args 里的 `.jrust` 文件推断语言，再启动 `jrust dap`（stdio）走 DAP |
 
@@ -52,14 +53,16 @@ openidea-plugin link /path/to/jrust-openidea-plugin
 ## 使用
 
 1. 用 OpenIDEA 打开一个包含 jrust 源码的项目。
-2. 项目根目录需要有 `main.jrust` 或 `Cargo.toml`——这是运行配置的触发标记（见下文限制）。
-3. 打开任意 `.jrust` 文件，编辑器应显示 Java 风格高亮。
-4. 运行配置下拉框里会出现 `jrust: <相对路径>`：
+2. 新建文件时选 **jrust Class**，输入 `Main.jrust` 即可得到带 `main` 方法的模板。
+3. 项目根目录需要有 `main.jrust` 或 `Cargo.toml`——这是运行配置的触发标记（见下文限制）。
+4. 打开任意 `.jrust` 文件，编辑器应显示 Java 风格高亮。
+5. 运行配置下拉框里会出现 `jrust: <相对路径>`：
    - **Run**：执行 `jrust run <文件>`，输出进入运行工具窗口。
    - **Debug**：启动 `jrust dap`，断点按 `.jrust` 行号生效，支持变量、调用栈、单步（由 jrust 自带的 DAP 适配器提供）。
 
 ## 限制
 
+- **新建项目向导不读取插件**：OpenIDEA 的项目生成器目录是编译进 `ide-scaffold` 的内置表，没有插件贡献点，所以向导里不会出现 “jrust 项目”。先新建 Empty 项目，再用 “jrust Class” 模板创建 `main.jrust`。
 - **运行配置的触发标记**：`[[contributes.runConfigurations]]` 的 `files` 只认项目根目录下的具体文件名，不支持通配符，因此声明为 `main.jrust` 与 `Cargo.toml`。项目根目录两者都没有时，不会列出运行配置。
 - **高亮精度**：没有 jrust 的 tree-sitter 语法，高亮来自 CodeMirror 的 Java 模式，个别 Rust 风格写法（如 `&`、所有权标注）着色可能不精确。
 - **`jrust dap` 的 launch 兼容**：OpenIDEA 会把运行配置原样转发到 DAP `launch` 请求（`program = "jrust"`、`args = ["run", "<文件>"]`）。jrust 侧已兼容两种形态：`program` 直接是 `.jrust` 文件，或在 `args` 中查找第一个 `.jrust` 文件。
@@ -67,8 +70,9 @@ openidea-plugin link /path/to/jrust-openidea-plugin
 ## 目录结构
 
 ```
-plugin.toml           插件清单（权限、激活、语言与运行配置贡献点）
+plugin.toml           插件清单（权限、激活、语言/文件模板/运行配置贡献点）
 languages/jrust.toml  语言定义：扩展名、注释、缩进、高亮模式、DAP 调试器
+templates/Main.jrust  新建文件模板（类名 $NAME$、光标停在 $END$）
 src/lib.rs            launch-configurations 导出：扫描 *.jrust 并生成运行/调试配置
 Cargo.toml            wasm32-wasip2 cdylib + OpenIDEA SDK
 ```
