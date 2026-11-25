@@ -7,7 +7,7 @@
 | 能力 | 实现 |
 | --- | --- |
 | 高亮 | 注册 `.jrust` 扩展名，复用 CodeMirror 的 `Java` 模式（jrust 是 Java 风格语法） |
-| 新建项目 | **工具 › jrust: 新建项目…** 选父目录、输入名称，调用 `jrust new` 生成骨架并在新窗口打开 |
+| 新建项目 | **工具 › jrust: 新建项目…** 选父目录、输入名称，调用 `jrust new` 生成 `main.jrust`、`main.rs` 与 `Cargo.toml`（可直接 `cargo run`），并在新窗口打开 |
 | 新建文件 | **文件 › 新建 › 文件…** 提供 “jrust Class” 模板，类名取自文件名（`$NAME$`） |
 | 运行 | 为项目内每个 `*.jrust` 生成运行配置：`jrust run <绝对路径>` |
 | 调试 | 运行配置的 `debugger` 留空，IDE 从 args 里的 `.jrust` 文件推断语言，再启动 `jrust dap`（stdio）走 DAP |
@@ -53,7 +53,7 @@ openidea-plugin link /path/to/jrust-openidea-plugin
 
 ## 使用
 
-1. **新建项目**：**工具 › jrust: 新建项目…**（也可在查找操作里搜 `jrust: 新建项目`），选父目录、输入项目名。插件执行 `jrust new` 生成 `main.jrust`，再走 IDE 的打开流程在新窗口打开。
+1. **新建项目**：**工具 › jrust: 新建项目…**（也可在查找操作里搜 `jrust: 新建项目`），选父目录、输入项目名。插件执行 `jrust new` 生成 `main.jrust`、即时转译的 `main.rs` 和 `Cargo.toml`（可直接 `cargo run`），再走 IDE 的打开流程在新窗口打开。
 2. 已有项目直接在 OpenIDEA 里打开；需要额外源码文件时用 **jrust Class** 模板新建（如 `Main.jrust`）。
 3. 项目根目录需要有 `main.jrust` 或 `Cargo.toml`——这是运行配置的触发标记（见下文限制）。
 4. 打开任意 `.jrust` 文件，编辑器应显示 Java 风格高亮。
