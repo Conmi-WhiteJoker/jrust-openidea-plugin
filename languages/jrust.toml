@@ -1,0 +1,23 @@
+id = "jrust"
+name = "jrust"
+extensions = ["jrust"]
+line-comment = "//"
+block-comment = ["/*", "*/"]
+indent = { tab-size = 4, insert-spaces = true }
+# 没有 tree-sitter 语法；复用 Java 的 CodeMirror 模式做高亮（jrust 是 Java 风格语法）。
+ui-mode = "Java"
+scratch-template = '''
+public class Main {
+    public static void main(String[] args) {
+        $END$
+    }
+}
+'''
+
+# Debug 按钮使用：IDE 启动 `jrust dap`，通过 stdio 走 DAP。
+[debugger]
+adapter = "jrust"
+command = "jrust"
+args = ["dap"]
+transport = "stdio"
+install-hint = "安装 jrust 并确保 `jrust` 在 PATH 中（cargo install --path <jrust 仓库>）"
